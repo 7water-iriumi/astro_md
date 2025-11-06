@@ -22,14 +22,31 @@ def generate():
     """Handles form submission, calculates the horoscope, and returns the result as JSON."""
     try:
         # --- Get Form Data ---
+        year = request.form.get('year')
+        month = request.form.get('month')
+        day = request.form.get('day')
+        hour = request.form.get('hour')
+        minute = request.form.get('minute')
+        location_name = request.form.get('location_name')
+
+        # Fallbacks: if time is unknown, assume 12:00
+        if not hour or str(hour).strip() == '':
+            hour = '12'
+        if not minute or str(minute).strip() == '':
+            minute = '0'
+
+        # Basic validation for required fields
+        if not year or not month or not day or not location_name:
+            return jsonify({'error': 'Missing required fields: year, month, day, and location_name are required.'}), 400
+
         data1 = {
-            'name': request.form.get('name'),
-            'year': request.form.get('year'),
-            'month': request.form.get('month'),
-            'day': request.form.get('day'),
-            'hour': request.form.get('hour'),
-            'minute': request.form.get('minute'),
-            'location_name': request.form.get('location_name')
+            'name': request.form.get('name'),  # optional
+            'year': year,
+            'month': month,
+            'day': day,
+            'hour': hour,
+            'minute': minute,
+            'location_name': location_name,
         }
 
         # --- Geocode Location ---
