@@ -61,6 +61,4 @@ env/
 # Ignore the large ephemeris data files
 ephe/
 
-# Ignore directories created by the reference script
-reports/
-charts/
+memo.txt
