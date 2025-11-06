@@ -1,115 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AstroMD Web</title>
     <style>
-        body { font-family: sans-serif; margin: 2em; }
-        form > div { margin-bottom: 1em; }
-        label { display: inline-block; width: 80px; }
-        .aspects-group label { width: auto; }
+        :root {
+            --bg: #0b0c10;
+            --panel: #12141a;
+            --border: #232634;
+            --text: #e6e9ef;
+            --muted: #a6adbb;
+            --accent: #7aa2f7;
+            --accent-weak: #3a5ccc;
+            --danger: #ff6b6b;
+            --radius: 10px;
+            --space-1: 6px;
+            --space-2: 12px;
+            --space-3: 18px;
+            --space-4: 24px;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", "Noto Sans JP", sans-serif;
+            color: var(--text);
+            background: radial-gradient(1200px 600px at 20% -10%, #1a2240 0%, #0b0c10 40%) no-repeat, var(--bg);
+        }
+
+        .container { max-width: 980px; margin: 0 auto; padding: var(--space-4); }
+
+        .app-header {
+            padding: var(--space-4) var(--space-4);
+            background: linear-gradient(180deg, rgba(122,162,247,0.09), rgba(122,162,247,0.0));
+            border-bottom: 1px solid var(--border);
+        }
+        .app-header .title h1 { margin: 0 0 var(--space-2); font-size: 28px; letter-spacing: .3px; }
+        .app-header .description { color: var(--muted); margin-bottom: var(--space-2); }
+        .app-header .usage h2 { margin: 0 0 var(--space-1); font-size: 18px; color: var(--text); }
+        .app-header .usage p { margin: 0; color: var(--muted); }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--space-4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        h1.page { font-size: 22px; margin: var(--space-4) 0 var(--space-2); }
+        h2.section { font-size: 18px; margin: 0 0 var(--space-2); }
+
+        form { display: grid; gap: var(--space-3); }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-3); }
+        @media (min-width: 680px) {
+            .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 14px; color: var(--muted); }
+        .field input[type="text"],
+        .field input[type="number"] { 
+            background: #0f1117; border: 1px solid var(--border); color: var(--text);
+            padding: 10px 12px; border-radius: 8px; outline: none; width: 100%;
+        }
+        .field input::placeholder { color: #6b7280; }
+        /* Normalize browser-specific color changes on number inputs */
+        .field input[type="number"]::-webkit-outer-spin-button,
+        .field input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .field input[type="number"] { -moz-appearance: textfield; caret-color: var(--text); }
+        .field input[type="number"]:in-range,
+        .field input[type="number"]:out-of-range,
+        .field input[type="number"]:invalid { color: var(--text); background: #0f1117; box-shadow: none; }
+        .field input:focus { border-color: var(--accent-weak); box-shadow: 0 0 0 3px rgba(122,162,247,.18); }
+        .hint { font-size: 12px; color: var(--muted); }
+
+        fieldset { border: 1px dashed var(--border); border-radius: 8px; padding: var(--space-3); }
+        legend { color: var(--muted); padding: 0 8px; }
+
+        .aspects-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; }
+        .aspects-group label { display: inline; }
+
+        .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        button {
+            appearance: none; border: 1px solid var(--accent-weak); color: var(--text);
+            background: linear-gradient(180deg, rgba(122,162,247,.15), rgba(122,162,247,.05));
+            padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 600;
+        }
+        button[disabled] { opacity: .6; cursor: not-allowed; }
+        .btn-secondary { border-color: var(--border); background: #0f1117; font-weight: 500; }
+
+        .result-wrap { margin-top: var(--space-3); display: grid; gap: var(--space-2); }
+        .result-box { background: #0f1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 380px; overflow: auto; }
+        pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 13px; }
+        .error { color: var(--danger); }
     </style>
+    
 </head>
 <body>
     <header class="app-header">
-        <div class="title">
-            <h1>Page Title</h1>
-        </div>
-        <div class="description">
-            <p>This is a web service that generates horoscope data in Markdown format, making it easy to get readings from AI.</p>
-        </div>
-        <div class="usage">
-            <h2>How to Use</h2>
-            <p>Enter the birth information in the form below and click 'Generate Horoscope'. The result will be displayed at the bottom of the page.</p>
+        <div class="container">
+            <div class="title">
+                <h1>AstroMD 占星術MDジェネレーター</h1>
+            </div>
+            <div class="description">
+                <p>ホロスコープデータをMarkdown形式で生成し、AIに占ってもらいやすい形に整えます。</p>
+            </div>
+            <div class="usage">
+                <h2>使い方</h2>
+                <p>以下のフォームに出生情報を入力し「ホロスコープを生成」を押します。下部に結果が表示されます。</p>
+            </div>
         </div>
     </header>
 
-    <hr>
+    <main class="container">
+        <h1 class="page">チャート入力</h1>
+        <section class="panel">
+            <form action="/generate" method="post" id="horoscope-form">
+                <h2 class="section">Chart 1</h2>
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="location">出生地</label>
+                        <input type="text" id="location" name="location_name" placeholder="例: 東京" required>
+                    </div>
+                    <div class="field">
+                        <label for="year">年</label>
+                        <input type="number" id="year" name="year" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
+                    </div>
+                    <div class="field">
+                        <label for="month">月</label>
+                        <input type="number" id="month" name="month" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
+                    </div>
+                    <div class="field">
+                        <label for="day">日</label>
+                        <input type="number" id="day" name="day" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
+                    </div>
+                    <div class="field">
+                        <label for="hour">時（不明なら空欄可）</label>
+                        <input type="number" id="hour" name="hour" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
+                        <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
+                    </div>
+                    <div class="field">
+                        <label for="minute">分（不明なら空欄可）</label>
+                        <input type="number" id="minute" name="minute" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
+                        <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
+                    </div>
+                </div>
 
-    <h1>AstroMD Horoscope Generator</h1>
-    <form action="/generate" method="post" id="horoscope-form">
-        <h2>Chart 1</h2>
-        <div>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" value="Taro">
-        </div>
-        <div>
-            <label for="year">Year:</label>
-            <input type="number" id="year" name="year" value="2001">
-        </div>
-        <div>
-            <label for="month">Month:</label>
-            <input type="number" id="month" name="month" value="7">
-        </div>
-        <div>
-            <label for="day">Day:</label>
-            <input type="number" id="day" name="day" value="5">
-        </div>
-        <div>
-            <label for="hour">Hour:</label>
-            <input type="number" id="hour" name="hour" value="20">
-        </div>
-        <div>
-            <label for="minute">Minute:</label>
-            <input type="number" id="minute" name="minute" value="35">
-        </div>
-        <div>
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location_name" value="東京都">
-        </div>
-        
-        <h3>Minor Aspects</h3>
-        <div class="aspects-group">
-            <input type="checkbox" id="quincunx" name="Quincunx" value="true">
-            <label for="quincunx">Quincunx</label>
-            <br>
-            <input type="checkbox" id="semisextile" name="Semisextile" value="true">
-            <label for="semisextile">Semisextile</label>
-            <br>
-            <input type="checkbox" id="semisquare" name="Semisquare" value="true">
-            <label for="semisquare">Semisquare</label>
-            <br>
-            <input type="checkbox" id="sesquiquadrate" name="Sesquiquadrate" value="true">
-            <label for="sesquiquadrate">Sesquiquadrate</label>
-            <br>
-            <input type="checkbox" id="quintile" name="Quintile" value="true">
-            <label for="quintile">Quintile</label>
-            <br>
-            <input type="checkbox" id="biquintile" name="Biquintile" value="true">
-            <label for="biquintile">Biquintile</label>
-        </div>
+                <fieldset style="margin-top: var(--space-2);">
+                    <legend>マイナーアスペクト</legend>
+                    <div class="aspects-group">
+                        <label><input type="checkbox" id="quincunx" name="Quincunx" value="true"> クインカンクス</label>
+                        <label><input type="checkbox" id="semisextile" name="Semisextile" value="true"> セミセクスタイル</label>
+                        <label><input type="checkbox" id="semisquare" name="Semisquare" value="true"> セミスクエア</label>
+                        <label><input type="checkbox" id="sesquiquadrate" name="Sesquiquadrate" value="true"> セスキスクエア</label>
+                        <label><input type="checkbox" id="quintile" name="Quintile" value="true"> クインタイル</label>
+                        <label><input type="checkbox" id="biquintile" name="Biquintile" value="true"> バイクインタイル</label>
+                    </div>
+                </fieldset>
 
-        <br>
-        <button type="submit">Generate Horoscope</button>
-    </form>
+                <div class="actions" style="margin-top: var(--space-3);">
+                    <button type="submit" id="generate-btn">ホロスコープを生成</button>
+                    <span id="loading" aria-live="polite" style="display:none">生成中...</span>
+                </div>
 
-    <hr>
-
-    <h2>Result</h2>
-    <div id="result-container">
-        <p>Your generated horoscope will appear here.</p>
-    </div>
+                <div class="result-wrap" aria-live="polite">
+                    <h2 class="section">結果</h2>
+                    <div id="result-container" class="result-box">
+                        <p>生成結果のMarkdownがここに表示されます。</p>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="btn-secondary" id="copy-btn" hidden>コピー</button>
+                        <button type="button" class="btn-secondary" id="download-btn" hidden>.md をダウンロード</button>
+                    </div>
+                    <div id="error-box" class="error" aria-live="assertive"></div>
+                </div>
+            </form>
+        </section>
+    </main>
 
     <script>
-        document.getElementById('horoscope-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
+        const form = document.getElementById('horoscope-form');
+        const resultContainer = document.getElementById('result-container');
+        const generateBtn = document.getElementById('generate-btn');
+        const loadingEl = document.getElementById('loading');
+        const copyBtn = document.getElementById('copy-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const errorBox = document.getElementById('error-box');
 
-            const form = event.target;
-            const formData = new FormData(form);
-            const resultContainer = document.getElementById('result-container');
+        function toggleLoading(loading) {
+            generateBtn.disabled = loading;
+            loadingEl.style.display = loading ? 'inline' : 'none';
+            generateBtn.setAttribute('aria-busy', loading ? 'true' : 'false');
+        }
 
-            resultContainer.innerHTML = '<p>Generating...</p>'; // Show a loading message
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            errorBox.textContent = '';
+
+            // Prepare form data with fallback for unknown time (12:00)
+            const fd = new FormData(form);
+            const hour = (fd.get('hour') || '').toString().trim();
+            const minute = (fd.get('minute') || '').toString().trim();
+            if (hour === '') fd.set('hour', '12');
+            if (minute === '') fd.set('minute', '0');
+
+            resultContainer.innerHTML = '<p>生成中...</p>';
+            toggleLoading(true);
 
             fetch('/generate', {
                 method: 'POST',
-                body: formData
+                body: fd
             })
-            .then(response => {
+            .then(async (response) => {
                 if (!response.ok) {
-                    // If response is not OK, get the error message from JSON body
-                    return response.json().then(err => {
+                    try {
+                        const err = await response.json();
                         throw new Error(err.error || 'Network response was not ok');
-                    });
+                    } catch (_) {
+                        throw new Error('ネットワークまたはサーバーエラーが発生しました');
+                    }
                 }
                 return response.json();
             })
@@ -117,16 +229,60 @@
                 if (data.markdown) {
                     const pre = document.createElement('pre');
                     pre.textContent = data.markdown;
-                    resultContainer.innerHTML = ''; // Clear previous content
+                    resultContainer.innerHTML = '';
                     resultContainer.appendChild(pre);
+                    copyBtn.hidden = false;
+                    downloadBtn.hidden = false;
+                    copyBtn.dataset.content = data.markdown;
+                    downloadBtn.dataset.content = data.markdown;
                 } else if (data.error) {
-                    resultContainer.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                    resultContainer.innerHTML = '';
+                    errorBox.textContent = `エラー: ${data.error}`;
+                    copyBtn.hidden = true;
+                    downloadBtn.hidden = true;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                resultContainer.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
+                resultContainer.innerHTML = '';
+                errorBox.textContent = `エラーが発生しました: ${error.message}`;
+                copyBtn.hidden = true;
+                downloadBtn.hidden = true;
+            })
+            .finally(() => {
+                toggleLoading(false);
             });
+        });
+
+        copyBtn.addEventListener('click', async () => {
+            const text = copyBtn.dataset.content || '';
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = text; document.body.appendChild(ta); ta.select();
+                    document.execCommand('copy'); document.body.removeChild(ta);
+                }
+                copyBtn.textContent = 'コピーしました';
+                setTimeout(() => (copyBtn.textContent = 'コピー'), 1500);
+            } catch (_) {
+                copyBtn.textContent = 'コピー失敗';
+                setTimeout(() => (copyBtn.textContent = 'コピー'), 1500);
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const content = downloadBtn.dataset.content || '';
+            const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'horoscope.md';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
         });
     </script>
 </body>

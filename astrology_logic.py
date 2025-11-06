@@ -141,7 +141,8 @@ def detect_complex_aspects(chart_points, aspects_to_calculate):
 def calculate_chart(birth_data, selected_aspects=None):
     """Calculates all astrological points for a single birth data object."""
     try:
-        name = birth_data.get('name', '').strip()
+        # Coalesce None to empty string to support optional name
+        name = (birth_data.get('name') or '').strip()
         year = int(birth_data['year'])
         month = int(birth_data['month'])
         day = int(birth_data['day'])
