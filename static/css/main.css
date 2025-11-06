@@ -90,6 +90,7 @@ legend { color: var(--muted); padding: 0 8px; }
 .aspects-group label { display: inline; }
 
 .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn,
 button {
   appearance: none; border: 1px solid var(--accent-weak); color: var(--text);
   background: linear-gradient(180deg, rgba(122,162,247,.15), rgba(122,162,247,.05));
@@ -97,6 +98,9 @@ button {
 }
 button[disabled] { opacity: .6; cursor: not-allowed; }
 .btn-secondary { border-color: var(--border); background: #0f1117; font-weight: 500; }
+.btn { text-decoration: none; display: inline-block; }
+.btn:hover { border-color: var(--accent); }
+.btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(122,162,247,.25); }
 
 .result-wrap { margin-top: var(--space-3); display: grid; gap: var(--space-2); }
 .result-box { background: #0f1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 380px; overflow: auto; }
