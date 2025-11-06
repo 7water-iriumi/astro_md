@@ -143,6 +143,7 @@ def calculate_chart(birth_data, selected_aspects=None):
     try:
         # Coalesce None to empty string to support optional name
         name = (birth_data.get('name') or '').strip()
+        time_unknown = bool(birth_data.get('time_unknown'))
         year = int(birth_data['year'])
         month = int(birth_data['month'])
         day = int(birth_data['day'])
@@ -198,8 +199,14 @@ def calculate_chart(birth_data, selected_aspects=None):
         for j in range(i + 1, len(chart_points)):
             p1, p2 = chart_points[i], chart_points[j]
 
-            if p1['name'] in sensitive_points and p2['name'] in sensitive_points:
-                continue
+            # If birth time is unknown, avoid aspects involving ASC/MC entirely.
+            # Otherwise, only skip ASC-MC pair aspects as before.
+            if time_unknown:
+                if p1['name'] in sensitive_points or p2['name'] in sensitive_points:
+                    continue
+            else:
+                if p1['name'] in sensitive_points and p2['name'] in sensitive_points:
+                    continue
 
             angle = abs(p1['lon'] - p2['lon'])
             if angle > 180: angle = 360 - angle

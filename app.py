@@ -34,8 +34,11 @@ def generate():
         minute = request.form.get('minute')
         location_name = request.form.get('location_name')
 
+        # Determine if birth time is unknown (hour not provided)
+        time_unknown1 = (not hour or str(hour).strip() == '')
+
         # Fallbacks: if time is unknown, assume 12:00
-        if not hour or str(hour).strip() == '':
+        if time_unknown1:
             hour = '12'
         if not minute or str(minute).strip() == '':
             minute = '0'
@@ -52,6 +55,7 @@ def generate():
             'hour': hour,
             'minute': minute,
             'location_name': location_name,
+            'time_unknown': time_unknown1,
         }
 
         # --- Geocode Location ---
@@ -84,7 +88,8 @@ def generate():
         selected_aspects2 = None
         has_chart2_core = year2 and month2 and day2 and location_name2
         if has_chart2_core:
-            if not hour2 or str(hour2).strip() == '':
+            time_unknown2 = (not hour2 or str(hour2).strip() == '')
+            if time_unknown2:
                 hour2 = '12'
             if not minute2 or str(minute2).strip() == '':
                 minute2 = '0'
@@ -96,6 +101,7 @@ def generate():
                 'hour': hour2,
                 'minute': minute2,
                 'location_name': location_name2,
+                'time_unknown': time_unknown2,
             }
             lat2, lon2 = geocode(data2['location_name'])
             if lat2 is None or lon2 is None:
