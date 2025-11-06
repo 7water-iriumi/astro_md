@@ -17,6 +17,11 @@ def index():
     """Renders the main input form."""
     return render_template('index.html')
 
+@app.route('/synastry')
+def synastry():
+    """Renders the double chart (synastry) input form."""
+    return render_template('synastry.html')
+
 @app.route('/generate', methods=['POST'])
 def generate():
     """Handles form submission, calculates the horoscope, and returns the result as JSON."""
@@ -67,8 +72,48 @@ def generate():
             'Biquintile': request.form.get('Biquintile') == 'true',
         }
 
+        # --- Optional: Chart 2 ---
+        year2 = request.form.get('year2')
+        month2 = request.form.get('month2')
+        day2 = request.form.get('day2')
+        hour2 = request.form.get('hour2')
+        minute2 = request.form.get('minute2')
+        location_name2 = request.form.get('location_name2')
+
+        data2 = None
+        selected_aspects2 = None
+        has_chart2_core = year2 and month2 and day2 and location_name2
+        if has_chart2_core:
+            if not hour2 or str(hour2).strip() == '':
+                hour2 = '12'
+            if not minute2 or str(minute2).strip() == '':
+                minute2 = '0'
+            data2 = {
+                'name': request.form.get('name2'),  # optional
+                'year': year2,
+                'month': month2,
+                'day': day2,
+                'hour': hour2,
+                'minute': minute2,
+                'location_name': location_name2,
+            }
+            lat2, lon2 = geocode(data2['location_name'])
+            if lat2 is None or lon2 is None:
+                return jsonify({'error': f"Could not find location: {data2['location_name']}"}), 400
+            data2['lat'] = lat2
+            data2['lon'] = lon2
+
+            selected_aspects2 = {
+                'Quincunx': request.form.get('Quincunx2') == 'true',
+                'Semisextile': request.form.get('Semisextile2') == 'true',
+                'Semisquare': request.form.get('Semisquare2') == 'true',
+                'Sesquiquadrate': request.form.get('Sesquiquadrate2') == 'true',
+                'Quintile': request.form.get('Quintile2') == 'true',
+                'Biquintile': request.form.get('Biquintile2') == 'true',
+            }
+
         # --- Generate Markdown ---
-        markdown_content = generate_horoscope_markdown(data1, selected_aspects1)
+        markdown_content = generate_horoscope_markdown(data1, selected_aspects1, data2, selected_aspects2)
 
         # --- Return Result as JSON ---
         return jsonify({'markdown': markdown_content})

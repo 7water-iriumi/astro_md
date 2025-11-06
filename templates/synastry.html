@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AstroMD Web — ダブルチャート</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <header class="app-header">
+    <div class="container">
+      <div class="title"><h1>ダブルチャート（シナストリー）</h1></div>
+      <div class="description"><p>2人分の出生情報からシナストリー用のMarkdownを生成します。</p></div>
+      <div class="usage"><p><a href="{{ url_for('index') }}">シングルチャートはこちら</a></p></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="page">チャート入力</h1>
+    <section class="panel">
+      <form action="/generate" method="post" id="synastry-form">
+        <h2 class="section">Chart 1</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label for="location">出生地</label>
+            <input type="text" id="location" name="location_name" placeholder="例: 東京" required>
+          </div>
+          <div class="field">
+            <label for="year">年</label>
+            <input type="number" id="year" name="year" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
+          </div>
+          <div class="field">
+            <label for="month">月</label>
+            <input type="number" id="month" name="month" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
+          </div>
+          <div class="field">
+            <label for="day">日</label>
+            <input type="number" id="day" name="day" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
+          </div>
+          <div class="field">
+            <label for="hour">時（不明なら空欄可）</label>
+            <input type="number" id="hour" name="hour" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
+            <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
+          </div>
+          <div class="field">
+            <label for="minute">分（不明なら空欄可）</label>
+            <input type="number" id="minute" name="minute" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
+            <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
+          </div>
+        </div>
+
+        <fieldset style="margin-top: 12px;">
+          <legend>マイナーアスペクト（Chart 1）</legend>
+          <div class="aspects-group">
+            <label><input type="checkbox" name="Quincunx" value="true"> クインカンクス</label>
+            <label><input type="checkbox" name="Semisextile" value="true"> セミセクスタイル</label>
+            <label><input type="checkbox" name="Semisquare" value="true"> セミスクエア</label>
+            <label><input type="checkbox" name="Sesquiquadrate" value="true"> セスキスクエア</label>
+            <label><input type="checkbox" name="Quintile" value="true"> クインタイル</label>
+            <label><input type="checkbox" name="Biquintile" value="true"> バイクインタイル</label>
+          </div>
+        </fieldset>
+
+        <h2 class="section" style="margin-top: 24px;">Chart 2</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label for="location2">出生地</label>
+            <input type="text" id="location2" name="location_name2" placeholder="例: 大阪" required>
+          </div>
+          <div class="field">
+            <label for="year2">年</label>
+            <input type="number" id="year2" name="year2" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
+          </div>
+          <div class="field">
+            <label for="month2">月</label>
+            <input type="number" id="month2" name="month2" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
+          </div>
+          <div class="field">
+            <label for="day2">日</label>
+            <input type="number" id="day2" name="day2" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
+          </div>
+          <div class="field">
+            <label for="hour2">時（不明なら空欄可）</label>
+            <input type="number" id="hour2" name="hour2" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
+            <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
+          </div>
+          <div class="field">
+            <label for="minute2">分（不明なら空欄可）</label>
+            <input type="number" id="minute2" name="minute2" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
+            <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
+          </div>
+        </div>
+
+        <fieldset style="margin-top: 12px;">
+          <legend>マイナーアスペクト（Chart 2）</legend>
+          <div class="aspects-group">
+            <label><input type="checkbox" name="Quincunx2" value="true"> クインカンクス</label>
+            <label><input type="checkbox" name="Semisextile2" value="true"> セミセクスタイル</label>
+            <label><input type="checkbox" name="Semisquare2" value="true"> セミスクエア</label>
+            <label><input type="checkbox" name="Sesquiquadrate2" value="true"> セスキスクエア</label>
+            <label><input type="checkbox" name="Quintile2" value="true"> クインタイル</label>
+            <label><input type="checkbox" name="Biquintile2" value="true"> バイクインタイル</label>
+          </div>
+        </fieldset>
+
+        <div class="actions" style="margin-top: 18px;">
+          <button type="submit" id="generate-btn">シナストリーを生成</button>
+          <span id="loading" aria-live="polite" style="display:none">生成中...</span>
+        </div>
+
+        <div class="result-wrap" aria-live="polite">
+          <h2 class="section">結果</h2>
+          <div id="result-container" class="result-box">
+            <p>生成結果のMarkdownがここに表示されます。</p>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-secondary" id="copy-btn" hidden>コピー</button>
+            <button type="button" class="btn-secondary" id="download-btn" hidden>.md をダウンロード</button>
+          </div>
+          <div id="error-box" class="error" aria-live="assertive"></div>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/synastry.js') }}"></script>
+</body>
+</html>
+

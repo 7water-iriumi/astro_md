@@ -1,4 +1,4 @@
-const form = document.getElementById('horoscope-form');
+const form = document.getElementById('synastry-form');
 const resultContainer = document.getElementById('result-container');
 const generateBtn = document.getElementById('generate-btn');
 const loadingEl = document.getElementById('loading');
@@ -18,57 +18,58 @@ if (form) {
     event.preventDefault();
     if (errorBox) errorBox.textContent = '';
 
-    // Prepare form data with fallback for unknown time (12:00)
     const fd = new FormData(form);
-    const hour = (fd.get('hour') || '').toString().trim();
-    const minute = (fd.get('minute') || '').toString().trim();
-    if (hour === '') fd.set('hour', '12');
-    if (minute === '') fd.set('minute', '0');
+    // Fallback for both charts
+    const h1 = (fd.get('hour') || '').toString().trim();
+    const m1 = (fd.get('minute') || '').toString().trim();
+    if (h1 === '') fd.set('hour', '12');
+    if (m1 === '') fd.set('minute', '0');
+    const h2 = (fd.get('hour2') || '').toString().trim();
+    const m2 = (fd.get('minute2') || '').toString().trim();
+    if (h2 === '') fd.set('hour2', '12');
+    if (m2 === '') fd.set('minute2', '0');
 
     if (resultContainer) resultContainer.innerHTML = '<p>生成中...</p>';
     toggleLoading(true);
 
-    fetch('/generate', {
-      method: 'POST',
-      body: fd
-    })
-    .then(async (response) => {
-      if (!response.ok) {
-        try {
-          const err = await response.json();
-          throw new Error(err.error || 'Network response was not ok');
-        } catch (_) {
-          throw new Error('ネットワークまたはサーバーエラーが発生しました');
+    fetch('/generate', { method: 'POST', body: fd })
+      .then(async (response) => {
+        if (!response.ok) {
+          try {
+            const err = await response.json();
+            throw new Error(err.error || 'Network response was not ok');
+          } catch (_) {
+            throw new Error('ネットワークまたはサーバーエラーが発生しました');
+          }
         }
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (!resultContainer) return;
-      if (data.markdown) {
-        const pre = document.createElement('pre');
-        pre.textContent = data.markdown;
-        resultContainer.innerHTML = '';
-        resultContainer.appendChild(pre);
-        if (copyBtn) { copyBtn.hidden = false; copyBtn.dataset.content = data.markdown; }
-        if (downloadBtn) { downloadBtn.hidden = false; downloadBtn.dataset.content = data.markdown; }
-      } else if (data.error) {
-        resultContainer.innerHTML = '';
-        if (errorBox) errorBox.textContent = `エラー: ${data.error}`;
+        return response.json();
+      })
+      .then(data => {
+        if (!resultContainer) return;
+        if (data.markdown) {
+          const pre = document.createElement('pre');
+          pre.textContent = data.markdown;
+          resultContainer.innerHTML = '';
+          resultContainer.appendChild(pre);
+          if (copyBtn) { copyBtn.hidden = false; copyBtn.dataset.content = data.markdown; }
+          if (downloadBtn) { downloadBtn.hidden = false; downloadBtn.dataset.content = data.markdown; }
+        } else if (data.error) {
+          resultContainer.innerHTML = '';
+          if (errorBox) errorBox.textContent = `エラー: ${data.error}`;
+          if (copyBtn) copyBtn.hidden = true;
+          if (downloadBtn) downloadBtn.hidden = true;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        if (resultContainer) resultContainer.innerHTML = '';
+        if (errorBox) errorBox.textContent = `エラーが発生しました: ${error.message}`;
         if (copyBtn) copyBtn.hidden = true;
         if (downloadBtn) downloadBtn.hidden = true;
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      if (resultContainer) resultContainer.innerHTML = '';
-      if (errorBox) errorBox.textContent = `エラーが発生しました: ${error.message}`;
-      if (copyBtn) copyBtn.hidden = true;
-      if (downloadBtn) downloadBtn.hidden = true;
-    })
-    .finally(() => {
-      toggleLoading(false);
-    });
+      })
+      .finally(() => {
+        toggleLoading(false);
+      });
   });
 }
 
@@ -99,10 +100,11 @@ if (downloadBtn) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'horoscope.md';
+    a.download = 'synastry.md';
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
   });
 }
+
