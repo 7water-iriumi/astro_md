@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AstroMD Web</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        form > div { margin-bottom: 1em; }
+        label { display: inline-block; width: 80px; }
+        .aspects-group label { width: auto; }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="title">
+            <h1>Page Title</h1>
+        </div>
+        <div class="description">
+            <p>This is a web service that generates horoscope data in Markdown format, making it easy to get readings from AI.</p>
+        </div>
+        <div class="usage">
+            <h2>How to Use</h2>
+            <p>Enter the birth information in the form below and click 'Generate Horoscope'. The result will be displayed at the bottom of the page.</p>
+        </div>
+    </header>
+
+    <hr>
+
+    <h1>AstroMD Horoscope Generator</h1>
+    <form action="/generate" method="post" id="horoscope-form">
+        <h2>Chart 1</h2>
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="Taro">
+        </div>
+        <div>
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" value="2001">
+        </div>
+        <div>
+            <label for="month">Month:</label>
+            <input type="number" id="month" name="month" value="7">
+        </div>
+        <div>
+            <label for="day">Day:</label>
+            <input type="number" id="day" name="day" value="5">
+        </div>
+        <div>
+            <label for="hour">Hour:</label>
+            <input type="number" id="hour" name="hour" value="20">
+        </div>
+        <div>
+            <label for="minute">Minute:</label>
+            <input type="number" id="minute" name="minute" value="35">
+        </div>
+        <div>
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location_name" value="東京都">
+        </div>
+        
+        <h3>Minor Aspects</h3>
+        <div class="aspects-group">
+            <input type="checkbox" id="quincunx" name="Quincunx" value="true">
+            <label for="quincunx">Quincunx</label>
+            <br>
+            <input type="checkbox" id="semisextile" name="Semisextile" value="true">
+            <label for="semisextile">Semisextile</label>
+            <br>
+            <input type="checkbox" id="semisquare" name="Semisquare" value="true">
+            <label for="semisquare">Semisquare</label>
+            <br>
+            <input type="checkbox" id="sesquiquadrate" name="Sesquiquadrate" value="true">
+            <label for="sesquiquadrate">Sesquiquadrate</label>
+            <br>
+            <input type="checkbox" id="quintile" name="Quintile" value="true">
+            <label for="quintile">Quintile</label>
+            <br>
+            <input type="checkbox" id="biquintile" name="Biquintile" value="true">
+            <label for="biquintile">Biquintile</label>
+        </div>
+
+        <br>
+        <button type="submit">Generate Horoscope</button>
+    </form>
+
+    <hr>
+
+    <h2>Result</h2>
+    <div id="result-container">
+        <p>Your generated horoscope will appear here.</p>
+    </div>
+
+    <script>
+        document.getElementById('horoscope-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const resultContainer = document.getElementById('result-container');
+
+            resultContainer.innerHTML = '<p>Generating...</p>'; // Show a loading message
+
+            fetch('/generate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    // If response is not OK, get the error message from JSON body
+                    return response.json().then(err => {
+                        throw new Error(err.error || 'Network response was not ok');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.markdown) {
+                    const pre = document.createElement('pre');
+                    pre.textContent = data.markdown;
+                    resultContainer.innerHTML = ''; // Clear previous content
+                    resultContainer.appendChild(pre);
+                } else if (data.error) {
+                    resultContainer.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultContainer.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
