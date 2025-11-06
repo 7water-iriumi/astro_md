@@ -227,7 +227,8 @@ def calculate_chart(birth_data, selected_aspects=None):
         "points": chart_points,
         "houses": list(houses),
         "aspects": found_aspects,
-        "complex_aspects": complex_aspects
+        "complex_aspects": complex_aspects,
+        "time_unknown": time_unknown,
     }
 
 def generate_horoscope_markdown(data1, selected_aspects1, data2=None, selected_aspects2=None):
@@ -255,6 +256,16 @@ def generate_horoscope_markdown(data1, selected_aspects1, data2=None, selected_a
             title = f"# Synastry Chart: {name1} and {name2}"
         
         markdown_lines = [title]
+
+        # Add notes if any chart has unknown birth time
+        notes = []
+        if chart1 and chart1.get('time_unknown'):
+            notes.append("- 注記 (Chart 1): 出生時刻が未入力のため、ASC/MCを含むアスペクトは計算していません。")
+        if chart2 and chart2.get('time_unknown'):
+            notes.append("- 注記 (Chart 2): 出生時刻が未入力のため、ASC/MCを含むアスペクトは計算していません。")
+        if notes:
+            markdown_lines.append("\n> 注意\n")
+            markdown_lines.extend([f"> {n}" for n in notes])
 
         charts_to_process = [chart1]
         if chart2: charts_to_process.append(chart2)
