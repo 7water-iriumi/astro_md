@@ -67,6 +67,19 @@ form { display: grid; gap: var(--space-3); }
 .field input[type="number"]:in-range,
 .field input[type="number"]:out-of-range,
 .field input[type="number"]:invalid { color: var(--text); background: #0f1117; box-shadow: none; }
+.field input[type="text"]:invalid { background: #0f1117; box-shadow: none; }
+.field input:invalid { background: #0f1117; box-shadow: none; }
+.field input { background-clip: padding-box; }
+.field input:-moz-ui-invalid { background: #0f1117; box-shadow: none; }
+/* Prevent autofill highlight overriding background */
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0px 1000px #0f1117 inset;
+  box-shadow: 0 0 0px 1000px #0f1117 inset;
+  transition: background-color 9999s ease-out 0s;
+}
 .field input:focus { border-color: var(--accent-weak); box-shadow: 0 0 0 3px rgba(122,162,247,.18); }
 .hint { font-size: 12px; color: var(--muted); }
 
@@ -89,4 +102,3 @@ button[disabled] { opacity: .6; cursor: not-allowed; }
 .result-box { background: #0f1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 380px; overflow: auto; }
 pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 13px; }
 .error { color: var(--danger); }
-
