@@ -279,17 +279,25 @@ def generate_horoscope_markdown(data1, selected_aspects1, data2=None, selected_a
             markdown_lines.append(f"- **Date:** {chart_data['date_str']}")
             markdown_lines.append(f"- **Location:** {chart_data['location_str']}")
             markdown_lines.append("\n### Planets and Points")
-            markdown_lines.append("| Name      | Position           |")
-            markdown_lines.append("| :-------- | :----------------- |")
-            for point in chart_data['points']:
-                house_num = get_house_for_point(point['lon'], chart_data['houses'])
-                markdown_lines.append(f"| {point['name']:<10}| {format_lon(point['lon'], signs):<18} | {house_num:<5} |")
-            
-            markdown_lines.append("\n### House Cusps")
-            markdown_lines.append("| House     | Position           |")
-            markdown_lines.append("| :-------- | :----------------- |")
-            for i_house, cusp in enumerate(chart_data['houses']):
-                markdown_lines.append(f"| {i_house+1:<10}| {format_lon(cusp, signs):<18} |")
+            if chart_data.get('time_unknown'):
+                markdown_lines.append("| Name      | Position           |")
+                markdown_lines.append("| :-------- | :----------------- |")
+                for point in chart_data['points']:
+                    markdown_lines.append(f"| {point['name']:<10}| {format_lon(point['lon'], signs):<18} |")
+            else:
+                markdown_lines.append("| Name      | Position           | House |")
+                markdown_lines.append("| :-------- | :----------------- | :----:|")
+                for point in chart_data['points']:
+                    house_num = get_house_for_point(point['lon'], chart_data['houses'])
+                    markdown_lines.append(f"| {point['name']:<10}| {format_lon(point['lon'], signs):<18} | {house_num:<5} |")
+
+            # House cusps are meaningful only when birth time is known
+            if not chart_data.get('time_unknown'):
+                markdown_lines.append("\n### House Cusps")
+                markdown_lines.append("| House     | Position           |")
+                markdown_lines.append("| :-------- | :----------------- |")
+                for i_house, cusp in enumerate(chart_data['houses']):
+                    markdown_lines.append(f"| {i_house+1:<10}| {format_lon(cusp, signs):<18} |")
 
             markdown_lines.append("\n### Aspects (Natal)")
             if chart_data['aspects']:
@@ -332,6 +340,12 @@ def generate_horoscope_markdown(data1, selected_aspects1, data2=None, selected_a
             sensitive_points = ['ASC', 'MC']
             for p1 in chart1['points']:
                 for p2 in chart2['points']:
+                    # Omit sensitive points entirely for a chart with unknown time
+                    if chart1.get('time_unknown') and p1['name'] in sensitive_points:
+                        continue
+                    if chart2.get('time_unknown') and p2['name'] in sensitive_points:
+                        continue
+                    # Otherwise, keep original rule to skip ASC-MC pair aspects
                     if p1['name'] in sensitive_points and p2['name'] in sensitive_points:
                         continue
 
@@ -346,20 +360,21 @@ def generate_horoscope_markdown(data1, selected_aspects1, data2=None, selected_a
                 synastry_aspects.sort(key=lambda x: float(x.split('(Orb: ')[1][:-2]))
 
             house_overlays = []
-            house_cusps1 = chart1['houses']
-            for p2 in chart2['points']:
-                planet_lon = p2['lon']
-                for i in range(12):
-                    cusp_start = house_cusps1[i]
-                    cusp_end = house_cusps1[(i + 1) % 12]
-                    if cusp_start < cusp_end:
-                        if cusp_start <= planet_lon < cusp_end:
-                            house_overlays.append(f"{name2}'s {p2['name']} in {name1}'s House {i+1}")
-                            break
-                    else:
-                        if cusp_start <= planet_lon < 360 or 0 <= planet_lon < cusp_end:
-                            house_overlays.append(f"{name2}'s {p2['name']} in {name1}'s House {i+1}")
-                            break
+            if not chart1.get('time_unknown'):
+                house_cusps1 = chart1['houses']
+                for p2 in chart2['points']:
+                    planet_lon = p2['lon']
+                    for i in range(12):
+                        cusp_start = house_cusps1[i]
+                        cusp_end = house_cusps1[(i + 1) % 12]
+                        if cusp_start < cusp_end:
+                            if cusp_start <= planet_lon < cusp_end:
+                                house_overlays.append(f"{name2}'s {p2['name']} in {name1}'s House {i+1}")
+                                break
+                        else:
+                            if cusp_start <= planet_lon < 360 or 0 <= planet_lon < cusp_end:
+                                house_overlays.append(f"{name2}'s {p2['name']} in {name1}'s House {i+1}")
+                                break
             
             markdown_lines.append("\n---\n")
             markdown_lines.append(f"## Synastry Aspects ({name1} & {name2})")
@@ -369,13 +384,15 @@ def generate_horoscope_markdown(data1, selected_aspects1, data2=None, selected_a
             else:
                 markdown_lines.append("- No major synastry aspects found.")
 
-            markdown_lines.append("\n---\n")
-            markdown_lines.append(f"## House Overlays ({name2} in {name1}'s Houses)")
-            if house_overlays:
-                for overlay_str in house_overlays:
-                    markdown_lines.append(f"- {overlay_str}")
-            else:
-                markdown_lines.append("- No house overlays found.")
+            # Show overlays section only if chart1's time is known
+            if not chart1.get('time_unknown'):
+                markdown_lines.append("\n---\n")
+                markdown_lines.append(f"## House Overlays ({name2} in {name1}'s Houses)")
+                if house_overlays:
+                    for overlay_str in house_overlays:
+                        markdown_lines.append(f"- {overlay_str}")
+                else:
+                    markdown_lines.append("- No house overlays found.")
 
         return "\n".join(markdown_lines)
 
