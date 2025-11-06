@@ -47,6 +47,12 @@
             <input type="number" id="minute" name="minute" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
             <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
           </div>
+          <div class="field">
+            <label>
+              <input type="checkbox" id="time-unknown" name="time_unknown" value="true"> 時刻不明
+            </label>
+            <div class="hint">チェック時はASC/MCおよびハウス関連の出力を省略します</div>
+          </div>
         </div>
 
         <fieldset style="margin-top: 12px;">
@@ -89,6 +95,12 @@
             <input type="number" id="minute2" name="minute2" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
             <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
           </div>
+          <div class="field">
+            <label>
+              <input type="checkbox" id="time-unknown2" name="time_unknown2" value="true"> 時刻不明（Chart 2）
+            </label>
+            <div class="hint">チェック時はChart 2のASC/MCを含む計算とハウス関連を省略します</div>
+          </div>
         </div>
 
         <fieldset style="margin-top: 12px;">
@@ -126,4 +138,3 @@
   <script src="{{ url_for('static', filename='js/synastry.js') }}"></script>
 </body>
 </html>
-

@@ -5,6 +5,20 @@ const loadingEl = document.getElementById('loading');
 const copyBtn = document.getElementById('copy-btn');
 const downloadBtn = document.getElementById('download-btn');
 const errorBox = document.getElementById('error-box');
+const hourInput = document.getElementById('hour');
+const minuteInput = document.getElementById('minute');
+const timeUnknownChk = document.getElementById('time-unknown');
+
+function applyTimeUnknownUI(checked) {
+  if (!hourInput || !minuteInput) return;
+  hourInput.disabled = !!checked;
+  minuteInput.disabled = !!checked;
+}
+
+if (timeUnknownChk) {
+  applyTimeUnknownUI(timeUnknownChk.checked);
+  timeUnknownChk.addEventListener('change', () => applyTimeUnknownUI(timeUnknownChk.checked));
+}
 
 function toggleLoading(loading) {
   if (!generateBtn || !loadingEl) return;
@@ -22,8 +36,10 @@ if (form) {
     const fd = new FormData(form);
     const hour = (fd.get('hour') || '').toString().trim();
     const minute = (fd.get('minute') || '').toString().trim();
+    const timeUnknown = timeUnknownChk ? timeUnknownChk.checked : false;
     if (hour === '') fd.set('hour', '12');
     if (minute === '') fd.set('minute', '0');
+    if (timeUnknown) fd.set('time_unknown', 'true');
 
     if (resultContainer) resultContainer.innerHTML = '<p>生成中...</p>';
     toggleLoading(true);

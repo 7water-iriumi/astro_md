@@ -34,8 +34,8 @@ def generate():
         minute = request.form.get('minute')
         location_name = request.form.get('location_name')
 
-        # Determine if birth time is unknown (hour not provided)
-        time_unknown1 = (not hour or str(hour).strip() == '')
+        # Determine if birth time is unknown (checkbox preferred, fallback to hour missing)
+        time_unknown1 = bool(request.form.get('time_unknown')) or (not hour or str(hour).strip() == '')
 
         # Fallbacks: if time is unknown, assume 12:00
         if time_unknown1:
@@ -88,7 +88,7 @@ def generate():
         selected_aspects2 = None
         has_chart2_core = year2 and month2 and day2 and location_name2
         if has_chart2_core:
-            time_unknown2 = (not hour2 or str(hour2).strip() == '')
+            time_unknown2 = bool(request.form.get('time_unknown2')) or (not hour2 or str(hour2).strip() == '')
             if time_unknown2:
                 hour2 = '12'
             if not minute2 or str(minute2).strip() == '':

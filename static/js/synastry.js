@@ -5,6 +5,23 @@ const loadingEl = document.getElementById('loading');
 const copyBtn = document.getElementById('copy-btn');
 const downloadBtn = document.getElementById('download-btn');
 const errorBox = document.getElementById('error-box');
+const hour1 = document.getElementById('hour');
+const minute1 = document.getElementById('minute');
+const hour2 = document.getElementById('hour2');
+const minute2 = document.getElementById('minute2');
+const timeUnknown1 = document.getElementById('time-unknown');
+const timeUnknown2 = document.getElementById('time-unknown2');
+
+function setDisabled(el, on) { if (el) el.disabled = !!on; }
+function syncTimeUnknownUI() {
+  setDisabled(hour1, timeUnknown1 && timeUnknown1.checked);
+  setDisabled(minute1, timeUnknown1 && timeUnknown1.checked);
+  setDisabled(hour2, timeUnknown2 && timeUnknown2.checked);
+  setDisabled(minute2, timeUnknown2 && timeUnknown2.checked);
+}
+if (timeUnknown1) timeUnknown1.addEventListener('change', syncTimeUnknownUI);
+if (timeUnknown2) timeUnknown2.addEventListener('change', syncTimeUnknownUI);
+syncTimeUnknownUI();
 
 function toggleLoading(loading) {
   if (!generateBtn || !loadingEl) return;
@@ -24,10 +41,12 @@ if (form) {
     const m1 = (fd.get('minute') || '').toString().trim();
     if (h1 === '') fd.set('hour', '12');
     if (m1 === '') fd.set('minute', '0');
+    if (timeUnknown1 && timeUnknown1.checked) fd.set('time_unknown', 'true');
     const h2 = (fd.get('hour2') || '').toString().trim();
     const m2 = (fd.get('minute2') || '').toString().trim();
     if (h2 === '') fd.set('hour2', '12');
     if (m2 === '') fd.set('minute2', '0');
+    if (timeUnknown2 && timeUnknown2.checked) fd.set('time_unknown2', 'true');
 
     if (resultContainer) resultContainer.innerHTML = '<p>生成中...</p>';
     toggleLoading(true);
@@ -107,4 +126,3 @@ if (downloadBtn) {
     URL.revokeObjectURL(url);
   });
 }
-
