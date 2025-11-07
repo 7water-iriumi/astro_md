@@ -1,0 +1,15 @@
+:root {
+  --bg: #0c1222;
+  --panel: #141a2a;
+  --border: #273047;
+  --text: #e9eef7;
+  --muted: #a9b2c7;
+  --accent: #89b4fa;
+  --accent-weak: #5a8dee;
+  --danger: #ff6b6b;
+}
+
+body {
+  background: radial-gradient(1200px 600px at 20% -10%, #1b2a52 0%, #0c1222 40%) no-repeat, var(--bg);
+}
+

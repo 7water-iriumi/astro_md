@@ -15,17 +15,29 @@ swe.set_ephe_path(ephe_path)
 @app.route('/')
 def index():
     """Renders the main input form."""
-    return render_template('index.html')
+    allowed_themes = {"default", "moonlight", "solar", "high-contrast", "dreamy", "soft-light"}
+    theme = request.args.get('theme') or os.getenv('ASTROMD_THEME', 'default')
+    if theme not in allowed_themes:
+        theme = 'default'
+    return render_template('index.html', theme=theme)
 
 @app.route('/faq')
 def faq():
     """Renders the FAQ page."""
-    return render_template('faq.html')
+    allowed_themes = {"default", "moonlight", "solar", "high-contrast", "dreamy", "soft-light"}
+    theme = request.args.get('theme') or os.getenv('ASTROMD_THEME', 'default')
+    if theme not in allowed_themes:
+        theme = 'default'
+    return render_template('faq.html', theme=theme)
 
 @app.route('/synastry')
 def synastry():
     """Renders the double chart (synastry) input form."""
-    return render_template('synastry.html')
+    allowed_themes = {"default", "moonlight", "solar", "high-contrast", "dreamy", "soft-light"}
+    theme = request.args.get('theme') or os.getenv('ASTROMD_THEME', 'default')
+    if theme not in allowed_themes:
+        theme = 'default'
+    return render_template('synastry.html', theme=theme)
 
 @app.route('/generate', methods=['POST'])
 def generate():

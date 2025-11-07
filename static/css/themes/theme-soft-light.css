@@ -1,0 +1,15 @@
+:root {
+  --bg: #f7f8fb;         /* soft light background */
+  --panel: #ffffff;       /* clean card */
+  --border: #e6e8f0;      /* subtle cool border */
+  --text: #1f2530;        /* dark slate for readability */
+  --muted: #667085;       /* muted slate */
+  --accent: #6ea8fe;      /* soft blue accent */
+  --accent-weak: #9bbcf9; /* lighter accent for borders */
+  --danger: #d36b6b;      /* gentle red */
+}
+
+body {
+  background: radial-gradient(1200px 600px at 20% -10%, #eef3ff 0%, #f7f8fb 60%) no-repeat, var(--bg);
+}
+
