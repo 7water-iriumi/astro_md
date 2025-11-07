@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AstroMD Web — Q&A</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/theme-' + (theme or 'default') + '.css') }}">
+  <meta name="description" content="AstroMD Webの使い方や注意点をまとめたQ&A。">
+  <meta property="og:title" content="AstroMD Web — Q&A">
+  <meta property="og:description" content="よくある質問（FAQ）と使い方のヒント。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="{{ url_for('static', filename='images/og_image.png') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
 <body>
   <header class="app-header">
@@ -36,11 +41,33 @@
       <h3>結果のコピー/ダウンロード方法</h3>
       <p>生成後に表示される「コピー」「.mdをダウンロード」ボタンをご利用ください。コピーはクリップボードへ、ダウンロードはファイル保存されます。</p>
 
-      <h3>ダブルチャート（シナストリー）の使い方</h3>
-      <p>ダブルチャートビューで2人分のデータを入力してください。どちらかの時刻が不明な場合、その側のASC/MCアスペクトは計算しません。ハウスオーバーレイはChart 1の時刻が分かる場合に表示されます。</p>
+      <h3>ダブルチャートの使い方</h3>
+      <p>ダブルチャートビューで2つのチャートの情報を入力してください。シナストリー（相性）、トランジット（経過）などの用途で使えます。どちらかの時刻が不明な場合、その側のASC/MCアスペクトは計算しません。ハウスオーバーレイはChart 1の時刻が分かる場合に表示されます。</p>
 
       <h3>生成されたMarkdownの利用上の注意</h3>
       <p>生成物は占星術解釈の素材として活用する想定です。解釈は文脈や目的に合わせて編集してご利用ください。</p>
+
+      <h2 class="section" style="margin-top: 24px;">その他</h2>
+      <h3>このツールの目的は？</h3>
+      <p>ChatGPTなどのAIは、占星術の天体位置を正確に計算する能力を持っていません。このツールは、正確なホロスコープデータを提供することで、AIがより質の高い解釈を生成する手助けをすることを目的としています。既存のホロスコープ作成サイトの情報をコピー＆ペーストする手間を省き、AIが読み取りやすい形式で出力します。</p>
+
+      <h3>なぜMarkdown形式なのですか？</h3>
+      <p>テストした結果、JSON形式よりもMarkdown形式の方が、AI（LLM）が文脈を理解し、安定してデータを読み解くのに適していると判断したためです。</p>
+
+      <h3>アスペクトのオーブ（許容度）は何度ですか？</h3>
+      <p>アスペクトは、以下のオーブ（許容度）設定で計算されています。</p>
+      <ul>
+        <li><strong>Conjunction (0°), Opposition (180°):</strong> 8°</li>
+        <li><strong>Trine (120°), Square (90°):</strong> 7°</li>
+        <li><strong>Sextile (60°):</strong> 5°</li>
+        <li><strong>Quincunx (150°), Semisextile (30°), Semisquare (45°), Sesquiquadrate (135°), Quintile (72°), Biquintile (144°):</strong> 2°</li>
+      </ul>
+
+      <h3>アスペクトのオーブ（許容度）は変更できますか？</h3>
+      <p>申し訳ありませんが、現時点ではオーブの値をユーザーが変更する機能はありません。</p>
+
+      <h3>ASCやMCが表示されません。</h3>
+      <p>ASC（アセンダント）やMC（エムシー）といった感受点は、正確な出生時刻がなければ計算できません。「時刻不明」オプションを選択した場合、これらの感受点および関連するハウスの情報は意図的に除外されます。正確なASC/MCを知りたい場合は、専門家による出生時刻の修正（レクティファイ）を検討することをお勧めします。</p>
     </section>
   </main>
 </body>

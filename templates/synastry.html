@@ -5,13 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AstroMD Web — ダブルチャート</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/theme-' + (theme or 'default') + '.css') }}">
+  <meta name="description" content="2つのホロスコープを重ねた二重円（シナストリー、トランジット）のMarkdownを生成します。">
+  <meta property="og:title" content="AstroMD Web — ダブルチャート">
+  <meta property="og:description" content="二重円（シナストリーやトランジット）のホロスコープMDを生成。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="{{ url_for('static', filename='images/og_image.png') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
 <body>
   <header class="app-header">
     <div class="container">
-      <div class="title"><h1>ダブルチャート（シナストリー）</h1></div>
-      <div class="description"><p>2人分の出生情報からシナストリー用のMarkdownを生成します。</p></div>
+      <div class="title"><h1>ダブルチャート</h1></div>
+      <div class="description"><p>2つのホロスコープ情報から、二重円（シナストリー、トランジット）のMarkdownを生成します。</p></div>
       <div class="usage">
         <div class="actions" style="margin-top: 8px; gap: 8px;">
           <a class="btn btn-secondary" href="{{ url_for('index') }}">シングルチャート</a>
@@ -122,7 +127,7 @@
         </fieldset>
 
         <div class="actions" style="margin-top: 18px;">
-          <button type="submit" id="generate-btn">シナストリーを生成</button>
+          <button type="submit" id="generate-btn">二重円を生成</button>
           <span id="loading" aria-live="polite" style="display:none">生成中...</span>
         </div>
 

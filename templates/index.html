@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AstroMD Web</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/theme-' + (theme or 'default') + '.css') }}">
-    
+  <meta name="description" content="ホロスコープをMarkdownで生成し、AIに渡しやすい形に整えるWebツール。">
+  <meta property="og:title" content="AstroMD Web">
+  <meta property="og:description" content="ホロスコープMDを生成してAI占いに最適化。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="{{ url_for('static', filename='images/og_image.png') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
 <body>
     <header class="app-header">

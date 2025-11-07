@@ -1,12 +1,13 @@
 :root {
-  --bg: #0b0c10;
-  --panel: #12141a;
-  --border: #232634;
-  --text: #e6e9ef;
-  --muted: #a6adbb;
-  --accent: #7aa2f7;
-  --accent-weak: #3a5ccc;
-  --danger: #ff6b6b;
+  /* soft-light theme as default */
+  --bg: #f7f8fb;         /* soft light background */
+  --panel: #ffffff;       /* clean card */
+  --border: #e6e8f0;      /* subtle cool border */
+  --text: #1f2530;        /* dark slate for readability */
+  --muted: #667085;       /* muted slate */
+  --accent: #6ea8fe;      /* soft blue accent */
+  --accent-weak: #9bbcf9; /* lighter accent for borders */
+  --danger: #d36b6b;      /* gentle red */
   --radius: 10px;
   --space-1: 6px;
   --space-2: 12px;
@@ -20,7 +21,7 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", "Noto Sans JP", sans-serif;
   color: var(--text);
-  background: radial-gradient(1200px 600px at 20% -10%, #1a2240 0%, #0b0c10 40%) no-repeat, var(--bg);
+  background: radial-gradient(1200px 600px at 20% -10%, #eef3ff 0%, #f7f8fb 60%) no-repeat, var(--bg);
 }
 
 .container { max-width: 980px; margin: 0 auto; padding: var(--space-4); }
@@ -56,28 +57,28 @@ form { display: grid; gap: var(--space-3); }
 .field label { font-size: 14px; color: var(--muted); }
 .field input[type="text"],
 .field input[type="number"] {
-  background: #0f1117; border: 1px solid var(--border); color: var(--text);
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
   padding: 10px 12px; border-radius: 8px; outline: none; width: 100%;
 }
-.field input::placeholder { color: #6b7280; }
+.field input::placeholder { color: var(--muted); }
 /* Normalize browser-specific color changes on number inputs */
 .field input[type="number"]::-webkit-outer-spin-button,
 .field input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .field input[type="number"] { -moz-appearance: textfield; caret-color: var(--text); }
 .field input[type="number"]:in-range,
 .field input[type="number"]:out-of-range,
-.field input[type="number"]:invalid { color: var(--text); background: #0f1117; box-shadow: none; }
-.field input[type="text"]:invalid { background: #0f1117; box-shadow: none; }
-.field input:invalid { background: #0f1117; box-shadow: none; }
+.field input[type="number"]:invalid { color: var(--text); background: var(--bg); box-shadow: none; }
+.field input[type="text"]:invalid { background: var(--bg); box-shadow: none; }
+.field input:invalid { background: var(--bg); box-shadow: none; }
 .field input { background-clip: padding-box; }
-.field input:-moz-ui-invalid { background: #0f1117; box-shadow: none; }
+.field input:-moz-ui-invalid { background: var(--bg); box-shadow: none; }
 /* Prevent autofill highlight overriding background */
 .field input:-webkit-autofill,
 .field input:-webkit-autofill:hover,
 .field input:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--text);
-  -webkit-box-shadow: 0 0 0px 1000px #0f1117 inset;
-  box-shadow: 0 0 0px 1000px #0f1117 inset;
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg) inset;
+  box-shadow: 0 0 0px 1000px var(--bg) inset;
   transition: background-color 9999s ease-out 0s;
 }
 .field input:focus { border-color: var(--accent-weak); box-shadow: 0 0 0 3px rgba(122,162,247,.18); }
@@ -97,12 +98,12 @@ button {
   padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 600;
 }
 button[disabled] { opacity: .6; cursor: not-allowed; }
-.btn-secondary { border-color: var(--border); background: #0f1117; font-weight: 500; }
+.btn-secondary { border-color: var(--border); background: #f4f6fb; font-weight: 500; }
 .btn { text-decoration: none; display: inline-block; }
 .btn:hover { border-color: var(--accent); }
 .btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(122,162,247,.25); }
 
 .result-wrap { margin-top: var(--space-3); display: grid; gap: var(--space-2); }
-.result-box { background: #0f1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 380px; overflow: auto; }
+.result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 380px; overflow: auto; }
 pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 13px; }
 .error { color: var(--danger); }
