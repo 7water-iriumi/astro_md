@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AstroMD Web — Q&A</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <header class="app-header">
+    <div class="container">
+      <div class="title"><h1>Q&A（よくある質問）</h1></div>
+      <div class="usage">
+        <div class="actions" style="margin-top: 8px; gap: 8px;">
+          <a class="btn btn-secondary" href="{{ url_for('index') }}">シングルチャート</a>
+          <a class="btn btn-secondary" href="{{ url_for('synastry') }}">ダブルチャート</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h2 class="section">基本</h2>
+      <h3>このサービスは何をしますか？</h3>
+      <p>ホロスコープの基礎データをMarkdownで生成し、AIに渡しやすい形式で出力します。生成後はコピーや.mdダウンロードが可能です。</p>
+
+      <h3>出生時刻が不明な場合はどうなりますか？</h3>
+      <p>「時刻不明」をチェックすると、ASC/MCを含むアスペクト計算とハウス関連の出力を省略します。計算上は便宜的に12:00で処理しますが、結果には注記が入ります。</p>
+
+      <h3>マイナーアスペクトの扱いは？</h3>
+      <p>必要なものだけチェックしてください。未チェックのものは計算対象に含めません。デフォルトは主要アスペクトのみです。</p>
+
+      <h2 class="section" style="margin-top: 24px;">使い方</h2>
+      <h3>結果のコピー/ダウンロード方法</h3>
+      <p>生成後に表示される「コピー」「.mdをダウンロード」ボタンをご利用ください。コピーはクリップボードへ、ダウンロードはファイル保存されます。</p>
+
+      <h3>ダブルチャート（シナストリー）の使い方</h3>
+      <p>ダブルチャートビューで2人分のデータを入力してください。どちらかの時刻が不明な場合、その側のASC/MCアスペクトは計算しません。ハウスオーバーレイはChart 1の時刻が分かる場合に表示されます。</p>
+
+      <h3>生成されたMarkdownの利用上の注意</h3>
+      <p>生成物は占星術解釈の素材として活用する想定です。解釈は文脈や目的に合わせて編集してご利用ください。</p>
+    </section>
+  </main>
+</body>
+</html>

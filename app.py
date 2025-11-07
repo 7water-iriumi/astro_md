@@ -17,6 +17,11 @@ def index():
     """Renders the main input form."""
     return render_template('index.html')
 
+@app.route('/faq')
+def faq():
+    """Renders the FAQ page."""
+    return render_template('faq.html')
+
 @app.route('/synastry')
 def synastry():
     """Renders the double chart (synastry) input form."""
