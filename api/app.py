@@ -17,6 +17,8 @@ def index():
     """Renders the main input form."""
     return render_template('index.html')
 
+
+"""
 @app.route('/faq')
 def faq():
     """Renders the FAQ page."""
@@ -133,6 +135,8 @@ def generate():
         # A simple error handler
         return jsonify({'error': str(e)}), 500
 
+        
+"""
 if __name__ == '__main__':
     # Note: debug=True is for development. Turn it off for production.
     app.run(debug=True)
