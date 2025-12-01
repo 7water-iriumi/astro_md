@@ -3,13 +3,13 @@ import os
 import swisseph as swe
 from astrology_logic import generate_horoscope_markdown, geocode
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates', static_folder='../static')
 
 # --- Swiss Ephemeris Setup ---
 # It's crucial to set the path to the ephemeris files.
 # These files need to be downloaded separately and placed in the 'ephe' directory.
-base_dir = os.path.dirname(os.path.abspath(__file__))
-ephe_path = os.path.join(base_dir, 'ephe')
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ephe_path = os.path.join(project_root, 'ephe')
 swe.set_ephe_path(ephe_path)
 
 @app.route('/')
