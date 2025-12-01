@@ -1,109 +1,105 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AstroMD Web</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <meta name="description" content="ホロスコープをMarkdownで生成し、AIに渡しやすい形に整えるWebツール。">
-  <meta property="og:title" content="AstroMD Web">
-  <meta property="og:description" content="ホロスコープMDを生成してAI占いに最適化。">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="{{ url_for('static', filename='images/og_image.png') }}">
-  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-</head>
-<body>
-    <header class="app-header">
-        <div class="container">
-            <div class="title">
-                <h1>AstroMD 占星術MDジェネレーター</h1>
-            </div>
-            <div class="description">
-                <p>ホロスコープデータをMarkdown形式で生成し、AIに占ってもらいやすい形に整えます。</p>
-            </div>
-            <div class="usage">
-                <h2>使い方</h2>
-                <p>以下のフォームに出生情報を入力し「ホロスコープを生成」を押します。下部に結果が表示されます。</p>
-                <div class="actions" style="margin-top: 8px;">
-                    <a class="btn" href="{{ url_for('synastry') }}">ダブルチャートはこちら</a>
-                    <a class="btn btn-secondary" href="{{ url_for('faq') }}">Q&A</a>
-                </div>
+{% extends "base.html" %}
+
+{% block head %}
+<title>AstroMD Web</title>
+<meta name="description" content="ホロスコープをMarkdownで生成し、AIに渡しやすい形に整えるWebツール。">
+<meta property="og:title" content="AstroMD Web">
+<meta property="og:description" content="ホロスコープMDを生成してAI占いに最適化。">
+{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <div class="container">
+        <div class="title">
+            <h1>AstroMD 占星術MDジェネレーター</h1>
+        </div>
+        <div class="description">
+            <p>ホロスコープデータをMarkdown形式で生成し、AIに占ってもらいやすい形に整えます。</p>
+        </div>
+        <div class="usage">
+            <h2>使い方</h2>
+            <p>以下のフォームに出生情報を入力し「ホロスコープを生成」を押します。下部に結果が表示されます。</p>
+            <div class="actions" style="margin-top: 8px;">
+                <a class="btn" href="{{ url_for('synastry') }}">ダブルチャートはこちら</a>
+                <a class="btn btn-secondary" href="{{ url_for('faq') }}">Q&A</a>
             </div>
         </div>
-    </header>
+    </div>
+</header>
+{% endblock %}
 
-    <main class="container">
-        <h1 class="page">チャート入力</h1>
-        <section class="panel">
-            <form action="/generate" method="post" id="horoscope-form">
-                <!-- <h2 class="section">Chart 1</h2> -->
-                <div class="form-grid">
-                    <div class="field">
-                        <label for="location">出生地</label>
-                        <input type="text" id="location" name="location_name" placeholder="例: 東京" required>
-                    </div>
-                    <div class="field">
-                        <label for="year">年</label>
-                        <input type="number" id="year" name="year" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
-                    </div>
-                    <div class="field">
-                        <label for="month">月</label>
-                        <input type="number" id="month" name="month" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
-                    </div>
-                    <div class="field">
-                        <label for="day">日</label>
-                        <input type="number" id="day" name="day" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
-                    </div>
-                    <div class="field">
-                        <label for="hour">時（不明なら空欄可）</label>
-                        <input type="number" id="hour" name="hour" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
-                        <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
-                    </div>
-                    <div class="field">
-                        <label for="minute">分（不明なら空欄可）</label>
-                        <input type="number" id="minute" name="minute" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
-                        <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
-                    </div>
-                    <div class="field">
-                        <label>
-                            <input type="checkbox" id="time-unknown" name="time_unknown" value="true"> 時刻不明
-                        </label>
-                        <div class="hint">チェック時はASC/MCおよびハウス関連の出力を省略します</div>
-                    </div>
-                </div>
+{% block content %}
+<h1 class="page">チャート入力</h1>
+<section class="panel">
+    <form action="/generate" method="post" id="horoscope-form">
+        <!-- <h2 class="section">Chart 1</h2> -->
+        <div class="form-grid">
+            <div class="field">
+                <label for="location">出生地</label>
+                <input type="text" id="location" name="location_name" placeholder="例: 東京" required>
+            </div>
+            <div class="field">
+                <label for="year">年</label>
+                <input type="number" id="year" name="year" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
+            </div>
+            <div class="field">
+                <label for="month">月</label>
+                <input type="number" id="month" name="month" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
+            </div>
+            <div class="field">
+                <label for="day">日</label>
+                <input type="number" id="day" name="day" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
+            </div>
+            <div class="field">
+                <label for="hour">時（不明なら空欄可）</label>
+                <input type="number" id="hour" name="hour" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
+                <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
+            </div>
+            <div class="field">
+                <label for="minute">分（不明なら空欄可）</label>
+                <input type="number" id="minute" name="minute" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
+                <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
+            </div>
+            <div class="field">
+                <label>
+                    <input type="checkbox" id="time-unknown" name="time_unknown" value="true"> 時刻不明
+                </label>
+                <div class="hint">チェック時はASC/MCおよびハウス関連の出力を省略します</div>
+            </div>
+        </div>
 
-                <fieldset style="margin-top: var(--space-2);">
-                    <legend>マイナーアスペクト</legend>
-                    <div class="aspects-group">
-                        <label><input type="checkbox" id="quincunx" name="Quincunx" value="true"> クインカンクス</label>
-                        <label><input type="checkbox" id="semisextile" name="Semisextile" value="true"> セミセクスタイル</label>
-                        <label><input type="checkbox" id="semisquare" name="Semisquare" value="true"> セミスクエア</label>
-                        <label><input type="checkbox" id="sesquiquadrate" name="Sesquiquadrate" value="true"> セスキスクエア</label>
-                        <label><input type="checkbox" id="quintile" name="Quintile" value="true"> クインタイル</label>
-                        <label><input type="checkbox" id="biquintile" name="Biquintile" value="true"> バイクインタイル</label>
-                    </div>
-                </fieldset>
+        <fieldset style="margin-top: var(--space-2);">
+            <legend>マイナーアスペクト</legend>
+            <div class="aspects-group">
+                <label><input type="checkbox" id="quincunx" name="Quincunx" value="true"> クインカンクス</label>
+                <label><input type="checkbox" id="semisextile" name="Semisextile" value="true"> セミセクスタイル</label>
+                <label><input type="checkbox" id="semisquare" name="Semisquare" value="true"> セミスクエア</label>
+                <label><input type="checkbox" id="sesquiquadrate" name="Sesquiquadrate" value="true"> セスキスクエア</label>
+                <label><input type="checkbox" id="quintile" name="Quintile" value="true"> クインタイル</label>
+                <label><input type="checkbox" id="biquintile" name="Biquintile" value="true"> バイクインタイル</label>
+            </div>
+        </fieldset>
 
-                <div class="actions" style="margin-top: var(--space-3);">
-                    <button type="submit" id="generate-btn">ホロスコープを生成</button>
-                    <span id="loading" aria-live="polite" style="display:none">生成中...</span>
-                </div>
+        <div class="actions" style="margin-top: var(--space-3);">
+            <button type="submit" id="generate-btn">ホロスコープを生成</button>
+            <span id="loading" aria-live="polite" style="display:none">生成中...</span>
+        </div>
 
-                <div class="result-wrap" aria-live="polite">
-                    <h2 class="section">結果</h2>
-                    <div id="result-container" class="result-box">
-                        <p>生成結果のMarkdownがここに表示されます。</p>
-                    </div>
-                    <div class="actions">
-                        <button type="button" class="btn-secondary" id="copy-btn" hidden>コピー</button>
-                        <button type="button" class="btn-secondary" id="download-btn" hidden>.md をダウンロード</button>
-                    </div>
-                    <div id="error-box" class="error" aria-live="assertive"></div>
-                </div>
-            </form>
-        </section>
-    </main>
+        <div class="result-wrap" aria-live="polite">
+            <h2 class="section">結果</h2>
+            <div id="result-container" class="result-box">
+                <p>生成結果のMarkdownがここに表示されます。</p>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn-secondary" id="copy-btn" hidden>コピー</button>
+                <button type="button" class="btn-secondary" id="download-btn" hidden>.md をダウンロード</button>
+            </div>
+            <div id="error-box" class="error" aria-live="assertive"></div>
+        </div>
+    </form>
+</section>
+{% endblock %}
 
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-</body>
-</html>
+{% block script %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

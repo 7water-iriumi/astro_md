@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ url_for('static', filename='images/og_image.png') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    {% block head %}{% endblock %}
+    <style>
+      .app-footer {
+        text-align: center;
+        padding: 24px 0;
+        margin-top: 48px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+      }
+    </style>
+</head>
+<body>
+    {% block header %}{% endblock %}
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <p>このサイトはAGPLライセンスのソフトウェアを利用しており、特に「<a href="https://www.astro.com/swisseph/sweph_e.htm" target="_blank" rel="noopener noreferrer">The Swiss Ephemeris by AstroDienst</a>」を使用しています。ソースコードは<a href="https://github.com/7water-iriumi/astro_md" target="_blank" rel="noopener noreferrer">GitHub</a>で公開しています。</p>
+        </div>
+    </footer>
+
+    {% block script %}{% endblock %}
+</body>
+</html>

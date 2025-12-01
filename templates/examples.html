@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>AstroMD Web – 実例デモ</title>
+<meta name="description" content="AI応答の実例デモ（モデル名と短い会話のみを掲載）。">
+<meta property="og:title" content="AstroMD Web – 実例デモ">
+<meta property="og:description" content="生成したMarkdownを外部AIに渡した場合の短い会話デモ。">
+{% endblock %}
+
+{% block style %}
+<style>
+    .chat { display: grid; gap: 14px; }
+    .bubble { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: var(--panel); }
+    .bubble.user { border-top-left-radius: 4px; background: #f4f6fb; }
+    .bubble.ai { border-top-right-radius: 4px; }
+    .meta { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 13px; }
+    .badge { display:inline-block; padding: 2px 8px; border: 1px solid var(--accent-weak); border-radius: 999px; background: rgba(122,162,247,.08); font-weight: 600; color: var(--text); }
+    .note { color: var(--muted); font-size: 12px; }
+</style>
+{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <div class="container">
+        <div class="title"><h1>実例デモ</h1></div>
+        <div class="usage">
+            <div class="actions" style="margin-top: 8px; gap: 8px;">
+                <a class="btn" href="{{ url_for('index') }}">シングルチャート</a>
+                <a class="btn" href="{{ url_for('synastry') }}">ダブルチャート</a>
+                <a class="btn" href="{{ url_for('faq') }}">Q&A</a>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <p class="note" style="text-align: center; margin-bottom: 16px;">
+        このツールで生成したMarkdownをコピーし、AIにそのまま渡すだけで、以下のような詳細な分析を得られます。
+        なお、詳細なデータについては個人情報保護の観点から掲載しておりません。
+    </p>
+    <div class="meta">
+        <span class="badge">Model: Gemini 2.5 Pro</span>
+    </div>
+    <div class="chat" style="margin-top: 12px;">
+        <!--
+          例を増やす場合は .example-card を複製して下に追加。
+        -->
+        <div class="chat-label">User</div>
+        <div class="bubble user">このホロスコープの人物はどんな人ですか？（作成したmdファイルを添付）</div>
+        <div class="chat-label" style="margin-top: 12px;">Gemini</div>
+        <div class="bubble ai">
+            <div>
+                <p>ご提供いただいたホロスコープデータに基づき、この人物の性格について分析します。</p>
+                <h3>🔮 この人物の全体像</h3>
+                <p><b>「独自の感性で世界を切り拓く、情熱的な理想家」</b></p>
+                <p>表面的には非常に個性的で、知的な雰囲気を持ち、既存の枠にとらわれない自由な発想をする人物です。しかし、そのクールな印象の内側には、豊かな感受性 と、社会的な目標達成に向けた非常に強力な情熱と集中力を秘めています。</p>
+                <h3>💡 主な性格的特徴</h3>
+                <p><b>独創的で自立した思考（ASC・天王星・水星）</b></p>
+                <p>第一印象やアイデンティティを示すアセンダント（ASC）が水瓶座にあり、さらにその水瓶座の支配星である天王星（革新・個性）がASCのすぐ近く（1ハウス）に位置しています。これは、<b>「個性的であること」「自分らしくあること」</b>を非常に強く追求する性質を示しています。</p>
+                <p>知性を表す水星は、好奇心旺盛な双子座にあり、さらに革新的な天王星とスムーズな角度（トライン）をとっています。これにより、<b>常識にとらわれないユニークな発想や、鋭い直感力、知的なひらめき</b>に恵まれています。</p>
+                <p><b>創造的な自己表現への強い欲求（5ハウスの集中）</b></p>
+                <p>「自己表現」や「創造性」を象徴する5ハウスに、太陽（人生の目的）、水星（知性）、木星（拡大）という3つの主要な天体が集中しています。</p>
+                <p>これは、<b>自分の内面にある感情（太陽 蟹座）や、あふれる知的好奇心（水星・木星 双子座）を、趣味、芸術、執筆、あるいは恋愛など、何らかの創造的な形で表現したい</b>という欲求が非常に強いことを示しています。</p>
+                <p><b>野心と強力な実行力（10ハウスの火星・冥王星）</b></p>
+                <p>キャリアや社会的な頂点を示すMC（天職）は蠍座にあります。これは、<b>生半可なことでは満足せず、専門分野を深く極めたり、強い影響力を持ったりする</b>ことを目指す傾向を示します。</p>
+                <p>さらに、そのキャリアの領域（10ハウス）に、情熱の火星と「徹底的な力」を持つ冥王星が重なって（コンジャンクション）います。これは、<b>目標達成のためには驚異的な集中力とエネルギーを発揮する、非常に強力な野心家</b>であることを意味します。</p>
+                <h3>🌗 内面的な葛藤とバランス</h3>
+                <p>このホロスコープは、いくつかの相反するエネルギーを持っており、それがこの人物の深みと複雑さを生み出しています。</p>
+                <p><b>感情（太陽） VS 現実（月）</b></p>
+                <p>感情豊かで共感的な「太陽 蟹座」 と、感情を抑圧し現実的な成果を求める「月 山羊座」 が、真正面から向き合っています（オポジション）。</p>
+                <p><b>「感情的に表現したい」という欲求</b>と、<b>「冷静に結果を出さなければ」というプレッシャー</b>の間で、常に関係者間のバランスを取ろうとする内面的な葛藤を抱えやすいでしょう。</p>
+                <p><b>情熱（火星） VS 抑制（土星）</b></p>
+                <p>「理想に向かって突進したい」という情熱的な火星 に対して、「慎重さ」や「制約」を意味する土星がブレーキをかける配置（オポジション）にあります。</p>
+                <p><b>大胆に行動したい気持ち</b>と、<b>不安やルールに縛られる感覚</b>との間で、ジレンマを感じることがあるかもしれません。</p>
+                <h3>📋 性格のまとめ</h3>
+                <p><b>長所：</b> 独創的な発想力、高い知性、強い集中力、目標達成への情熱、豊かな感受性</p>
+                <p><b>課題：</b> 感情と理性の葛藤、理想と現実のギャップ、行動へのブレーキ</p>
+                <p>総じて、<b>非常に強い個性を持ち、知的好奇心と創造的なエネルギーにあふれた人物</b>です。キャリアにおいては類まれな集中力を発揮して大きなことを成し遂げる可能性を秘めていますが、同時に、自分自身の内面にある相反するエネルギー（感情と理性、情熱と抑制）のバランスをうまくとっていくことが、人生の大きなテーマとなるでしょう。</p>
+                <hr>
+                <p>この分析結果について、さらに詳しく知りたい点や、特定の側面（例えば「恋愛傾向」や「仕事運」など）について掘り下げてほしい部分はありますか？</p>
+            </div>
+        </div>
+</section>
+{% endblock %}

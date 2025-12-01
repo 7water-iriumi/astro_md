@@ -1,151 +1,147 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AstroMD Web — ダブルチャート</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <meta name="description" content="2つのホロスコープを重ねた二重円（シナストリー、トランジット）のMarkdownを生成します。">
-  <meta property="og:title" content="AstroMD Web — ダブルチャート">
-  <meta property="og:description" content="二重円（シナストリーやトランジット）のホロスコープMDを生成。">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="{{ url_for('static', filename='images/og_image.png') }}">
-  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-</head>
-<body>
-  <header class="app-header">
-    <div class="container">
-      <div class="title"><h1>ダブルチャート</h1></div>
-      <div class="description"><p>2つのホロスコープ情報から、二重円（シナストリー、トランジット）のMarkdownを生成します。</p></div>
-      <div class="usage">
-        <div class="actions" style="margin-top: 8px; gap: 8px;">
-          <a class="btn btn-secondary" href="{{ url_for('index') }}">シングルチャート</a>
-          <a class="btn btn-secondary" href="{{ url_for('faq') }}">Q&A</a>
-        </div>
-      </div>
-    </div>
-  </header>
+{% extends "base.html" %}
 
-  <main class="container">
-    <h1 class="page">チャート入力</h1>
-    <section class="panel">
-      <form action="/generate" method="post" id="synastry-form">
+{% block head %}
+<title>AstroMD Web — ダブルチャート</title>
+<meta name="description" content="2つのホロスコープを重ねた二重円（シナストリー、トランジット）のMarkdownを生成します。">
+<meta property="og:title" content="AstroMD Web — ダブルチャート">
+<meta property="og:description" content="二重円（シナストリーやトランジット）のホロスコープMDを生成。">
+{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <div class="container">
+        <div class="title"><h1>ダブルチャート</h1></div>
+        <div class="description"><p>2つのホロスコープ情報から、二重円（シナストリー、トランジット）のMarkdownを生成します。</p></div>
+        <div class="usage">
+            <div class="actions" style="margin-top: 8px; gap: 8px;">
+                <a class="btn btn-secondary" href="{{ url_for('index') }}">シングルチャート</a>
+                <a class="btn btn-secondary" href="{{ url_for('faq') }}">Q&A</a>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<h1 class="page">チャート入力</h1>
+<section class="panel">
+    <form action="/generate" method="post" id="synastry-form">
         <h2 class="section">Chart 1</h2>
         <div class="form-grid">
-          <div class="field">
-            <label for="location">出生地</label>
-            <input type="text" id="location" name="location_name" placeholder="例: 東京" required>
-          </div>
-          <div class="field">
-            <label for="year">年</label>
-            <input type="number" id="year" name="year" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
-          </div>
-          <div class="field">
-            <label for="month">月</label>
-            <input type="number" id="month" name="month" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
-          </div>
-          <div class="field">
-            <label for="day">日</label>
-            <input type="number" id="day" name="day" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
-          </div>
-          <div class="field">
-            <label for="hour">時（不明なら空欄可）</label>
-            <input type="number" id="hour" name="hour" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
-            <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
-          </div>
-          <div class="field">
-            <label for="minute">分（不明なら空欄可）</label>
-            <input type="number" id="minute" name="minute" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
-            <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
-          </div>
-          <div class="field">
-            <label>
-              <input type="checkbox" id="time-unknown" name="time_unknown" value="true"> 時刻不明
-            </label>
-            <div class="hint">チェック時はASC/MCおよびハウス関連の出力を省略します</div>
-          </div>
+            <div class="field">
+                <label for="location">出生地</label>
+                <input type="text" id="location" name="location_name" placeholder="例: 東京" required>
+            </div>
+            <div class="field">
+                <label for="year">年</label>
+                <input type="number" id="year" name="year" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
+            </div>
+            <div class="field">
+                <label for="month">月</label>
+                <input type="number" id="month" name="month" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
+            </div>
+            <div class="field">
+                <label for="day">日</label>
+                <input type="number" id="day" name="day" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
+            </div>
+            <div class="field">
+                <label for="hour">時（不明なら空欄可）</label>
+                <input type="number" id="hour" name="hour" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
+                <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
+            </div>
+            <div class="field">
+                <label for="minute">分（不明なら空欄可）</label>
+                <input type="number" id="minute" name="minute" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
+                <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
+            </div>
+            <div class="field">
+                <label>
+                    <input type="checkbox" id="time-unknown" name="time_unknown" value="true"> 時刻不明
+                </label>
+                <div class="hint">チェック時はASC/MCおよびハウス関連の出力を省略します</div>
+            </div>
         </div>
 
         <fieldset style="margin-top: 12px;">
-          <legend>マイナーアスペクト（Chart 1）</legend>
-          <div class="aspects-group">
-            <label><input type="checkbox" name="Quincunx" value="true"> クインカンクス</label>
-            <label><input type="checkbox" name="Semisextile" value="true"> セミセクスタイル</label>
-            <label><input type="checkbox" name="Semisquare" value="true"> セミスクエア</label>
-            <label><input type="checkbox" name="Sesquiquadrate" value="true"> セスキスクエア</label>
-            <label><input type="checkbox" name="Quintile" value="true"> クインタイル</label>
-            <label><input type="checkbox" name="Biquintile" value="true"> バイクインタイル</label>
-          </div>
+            <legend>マイナーアスペクト（Chart 1）</legend>
+            <div class="aspects-group">
+                <label><input type="checkbox" name="Quincunx" value="true"> クインカンクス</label>
+                <label><input type="checkbox" name="Semisextile" value="true"> セミセクスタイル</label>
+                <label><input type="checkbox" name="Semisquare" value="true"> セミスクエア</label>
+                <label><input type="checkbox" name="Sesquiquadrate" value="true"> セスキスクエア</label>
+                <label><input type="checkbox" name="Quintile" value="true"> クインタイル</label>
+                <label><input type="checkbox" name="Biquintile" value="true"> バイクインタイル</label>
+            </div>
         </fieldset>
 
         <h2 class="section" style="margin-top: 24px;">Chart 2</h2>
         <div class="form-grid">
-          <div class="field">
-            <label for="location2">出生地</label>
-            <input type="text" id="location2" name="location_name2" placeholder="例: 大阪" required>
-          </div>
-          <div class="field">
-            <label for="year2">年</label>
-            <input type="number" id="year2" name="year2" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
-          </div>
-          <div class="field">
-            <label for="month2">月</label>
-            <input type="number" id="month2" name="month2" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
-          </div>
-          <div class="field">
-            <label for="day2">日</label>
-            <input type="number" id="day2" name="day2" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
-          </div>
-          <div class="field">
-            <label for="hour2">時（不明なら空欄可）</label>
-            <input type="number" id="hour2" name="hour2" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
-            <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
-          </div>
-          <div class="field">
-            <label for="minute2">分（不明なら空欄可）</label>
-            <input type="number" id="minute2" name="minute2" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
-            <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
-          </div>
-          <div class="field">
-            <label>
-              <input type="checkbox" id="time-unknown2" name="time_unknown2" value="true"> 時刻不明（Chart 2）
-            </label>
-            <div class="hint">チェック時はChart 2のASC/MCを含む計算とハウス関連を省略します</div>
-          </div>
+            <div class="field">
+                <label for="location2">出生地</label>
+                <input type="text" id="location2" name="location_name2" placeholder="例: 大阪" required>
+            </div>
+            <div class="field">
+                <label for="year2">年</label>
+                <input type="number" id="year2" name="year2" inputmode="numeric" min="1800" max="2100" placeholder="例: 2000" required>
+            </div>
+            <div class="field">
+                <label for="month2">月</label>
+                <input type="number" id="month2" name="month2" inputmode="numeric" min="1" max="12" placeholder="1-12" required>
+            </div>
+            <div class="field">
+                <label for="day2">日</label>
+                <input type="number" id="day2" name="day2" inputmode="numeric" min="1" max="31" placeholder="1-31" required>
+            </div>
+            <div class="field">
+                <label for="hour2">時（不明なら空欄可）</label>
+                <input type="number" id="hour2" name="hour2" inputmode="numeric" min="0" max="23" placeholder="未入力時は12時">
+                <div class="hint">未入力の場合は <strong>12</strong> として扱います</div>
+            </div>
+            <div class="field">
+                <label for="minute2">分（不明なら空欄可）</label>
+                <input type="number" id="minute2" name="minute2" inputmode="numeric" min="0" max="59" placeholder="未入力時は00分">
+                <div class="hint">未入力の場合は <strong>00</strong> として扱います</div>
+            </div>
+            <div class="field">
+                <label>
+                    <input type="checkbox" id="time-unknown2" name="time_unknown2" value="true"> 時刻不明（Chart 2）
+                </label>
+                <div class="hint">チェック時はChart 2のASC/MCを含む計算とハウス関連を省略します</div>
+            </div>
         </div>
 
         <fieldset style="margin-top: 12px;">
-          <legend>マイナーアスペクト（Chart 2）</legend>
-          <div class="aspects-group">
-            <label><input type="checkbox" name="Quincunx2" value="true"> クインカンクス</label>
-            <label><input type="checkbox" name="Semisextile2" value="true"> セミセクスタイル</label>
-            <label><input type="checkbox" name="Semisquare2" value="true"> セミスクエア</label>
-            <label><input type="checkbox" name="Sesquiquadrate2" value="true"> セスキスクエア</label>
-            <label><input type="checkbox" name="Quintile2" value="true"> クインタイル</label>
-            <label><input type="checkbox" name="Biquintile2" value="true"> バイクインタイル</label>
-          </div>
+            <legend>マイナーアスペクト（Chart 2）</legend>
+            <div class="aspects-group">
+                <label><input type="checkbox" name="Quincunx2" value="true"> クインカンクス</label>
+                <label><input type="checkbox" name="Semisextile2" value="true"> セミセクスタイル</label>
+                <label><input type="checkbox" name="Semisquare2" value="true"> セミスクエア</label>
+                <label><input type="checkbox" name="Sesquiquadrate2" value="true"> セスキスクエア</label>
+                <label><input type="checkbox" name="Quintile2" value="true"> クインタイル</label>
+                <label><input type="checkbox" name="Biquintile2" value="true"> バイクインタイル</label>
+            </div>
         </fieldset>
 
         <div class="actions" style="margin-top: 18px;">
-          <button type="submit" id="generate-btn">二重円を生成</button>
-          <span id="loading" aria-live="polite" style="display:none">生成中...</span>
+            <button type="submit" id="generate-btn">二重円を生成</button>
+            <span id="loading" aria-live="polite" style="display:none">生成中...</span>
         </div>
 
         <div class="result-wrap" aria-live="polite">
-          <h2 class="section">結果</h2>
-          <div id="result-container" class="result-box">
-            <p>生成結果のMarkdownがここに表示されます。</p>
-          </div>
-          <div class="actions">
-            <button type="button" class="btn-secondary" id="copy-btn" hidden>コピー</button>
-            <button type="button" class="btn-secondary" id="download-btn" hidden>.md をダウンロード</button>
-          </div>
-          <div id="error-box" class="error" aria-live="assertive"></div>
+            <h2 class="section">結果</h2>
+            <div id="result-container" class="result-box">
+                <p>生成結果のMarkdownがここに表示されます。</p>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn-secondary" id="copy-btn" hidden>コピー</button>
+                <button type="button" class="btn-secondary" id="download-btn" hidden>.md をダウンロード</button>
+            </div>
+            <div id="error-box" class="error" aria-live="assertive"></div>
         </div>
-      </form>
-    </section>
-  </main>
+    </form>
+</section>
+{% endblock %}
 
-  <script src="{{ url_for('static', filename='js/synastry.js') }}"></script>
-</body>
-</html>
+{% block script %}
+<script src="{{ url_for('static', filename='js/synastry.js') }}"></script>
+{% endblock %}
