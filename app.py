@@ -3,34 +3,34 @@ import os
 import swisseph as swe
 from astrology_logic import generate_horoscope_markdown, geocode
 
-app = Flask(__name__, template_folder='../templates', static_folder='../static')
+app = Flask(__name__)
 
 # --- Swiss Ephemeris Setup ---
 # It's crucial to set the path to the ephemeris files.
 # These files need to be downloaded separately and placed in the 'ephe' directory.
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+project_root = os.path.dirname(os.path.abspath(__file__))
 ephe_path = os.path.join(project_root, 'ephe')
 swe.set_ephe_path(ephe_path)
 
 @app.route('/')
 def index():
-    """Renders the main input form."""
+    # Renders the main input form.
     return render_template('index.html')
 
 
 @app.route('/faq')
 def faq():
-    """Renders the FAQ page."""
+    # Renders the FAQ page.
     return render_template('faq.html')
 
 @app.route('/synastry')
 def synastry():
-    """Renders the double chart (synastry) input form."""
+    # Renders the double chart (synastry) input form.
     return render_template('synastry.html')
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    """Handles form submission, calculates the horoscope, and returns the result as JSON."""
+    # Handles form submission, calculates the horoscope, and returns the result as JSON.
     try:
         # --- Get Form Data ---
         year = request.form.get('year')
