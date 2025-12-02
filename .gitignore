@@ -63,3 +63,6 @@ ephe/
 
 memo.txt
 ignored/
+
+.vercel
+.env*.local
