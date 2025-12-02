@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="{{ url_for('static', filename='images/og_image.png') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <meta property="og:image" content="{{ url_for('static', filename='images/ogimage.png') }}">
     {% block head %}{% endblock %}
     <style>
       .app-footer {
@@ -33,6 +32,13 @@
             （AGPL）を利用しており、AGPL に基づきソースコードを
             <a href="https://github.com/7water-iriumi/astro_md" target="_blank" rel="noopener noreferrer">GitHub</a>
             にて公開しています。
+            </p>
+            <p>
+            一部アイコンは <a href="https://www.flaticon.com/free-icons/astrology" title="astrology icons">Astrology icons created by muh zakaria - Flaticon</a>
+より提供されています。
+            </p>
+            <p>
+            Geocoding by Nominatim, data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors.
             </p>
         </div>
     </footer>

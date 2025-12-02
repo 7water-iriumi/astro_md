@@ -28,6 +28,11 @@ def synastry():
     # Renders the double chart (synastry) input form.
     return render_template('synastry.html')
 
+@app.route('/examples')
+def examples():
+    # Renders the examples page.
+    return render_template('examples.html')
+
 @app.route('/generate', methods=['POST'])
 def generate():
     # Handles form submission, calculates the horoscope, and returns the result as JSON.
